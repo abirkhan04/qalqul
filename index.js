@@ -48,10 +48,11 @@ var posts=[];
                https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`, (resp)=> {
                   resp.on('data', (chunk) => {
                      data += chunk;
-                   });
+                  });
                   resp.on("end", ()=> {
-                       if(JSON.parse(data).comments)
-                         post.comments = JSON.parse(data).comments.data;
+                     console.log("comments", data);
+                     if(JSON.parse(data).comments)
+                        post.comments = JSON.parse(data).comments.data;
                   }); 
                  }).on("error", (err)=> {
                   console.log("Error: "+ err.message);
