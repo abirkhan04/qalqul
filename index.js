@@ -29,7 +29,7 @@ const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=60978518
       console.log(JSON.stringify(req.body))
       console.log('Facebook request body end:'); 
       axios.get(oauthUrl).then((response)=> {
-         console.log(JSON.stringify(response));
+         console.log(response);
       });
       res.sendStatus(200);
    });  
