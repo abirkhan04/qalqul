@@ -50,9 +50,7 @@ var posts=[];
                      data += chunk;
                   });
                   resp.on("end", ()=> {
-                     console.log("comments", data);
-                     if(JSON.parse(data).comments)
-                        post.comments = JSON.parse(data).comments.data;
+                        post.comments = JSON.parse(data).data;
                   }); 
                  }).on("error", (err)=> {
                   console.log("Error: "+ err.message);
