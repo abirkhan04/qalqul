@@ -50,7 +50,7 @@ var posts=[];
                      data += chunk;
                    });
                   resp.on("end", ()=> {
-                     post.comments = JSON.parse(data).comments.data;
+                        post.comments = JSON.parse(data).comments.data || [];
                   }); 
                  }).on("error", (err)=> {
                   console.log("Error: "+ err.message);
