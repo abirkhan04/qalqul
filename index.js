@@ -13,7 +13,6 @@ const postUrl = `https://graph.facebook.com/me?fields=posts&access_token=${user_
 const urlRoot = "https://graph.facebook.com/";
 
 var posts=[];
-var comments=[];
 
   app.get('/test', function(req, res) {
      res.send({message: "This is test"});
@@ -44,11 +43,18 @@ var comments=[];
          });
          resp.on('end', () => {
            posts=JSON.parse(data).posts.data;
-           let commentPromises= posts.map((post)=> {
-              return https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`);
-           });
-           Promise.all(commentPromises).then((response)=> {
-               comments = response.data;
+           posts.forEach((post)=> {
+               let data ='';
+               https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`, (resp)=> {
+                  resp.on('data', (chunk) => {
+                     data += chunk;
+                   });
+                  resp.on("end", ()=> {
+                     post.comments = JSON.parse(data).comments.data;
+                  }); 
+                 }).on("error", (err)=> {
+                  console.log("Error: "+ err.message);
+               });
            });
          });
        }).on("error", (err) => {
@@ -56,14 +62,10 @@ var comments=[];
        });
       });
       res.sendStatus(200);
-   }); 
-   
-   app.get('/posts', function(req, res){
-      res.send(posts);
    });
 
-   app.get('/comments', function(req, res){
-      res.send(comments);
+   app.get('/posts', function(req, res){
+      res.send(posts);
    });
 
 app.listen(process.env.PORT || port, () => console.log(`webhook is listening on port ${port}`));
