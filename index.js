@@ -5,11 +5,15 @@ const
   express = require('express'),
   bodyParser = require('body-parser'),
   app = express().use(bodyParser.json());
-const port = 3000;  
+const port = 3000;
+const user_access_token="EABWp9sQ7yjgBAKZBOUbRdZAKeMLX7xj0GpYcoMA87KZCwFQahEzkJSD4uYIVCXAempoo0ZCSuIGgOiwN1Y98JoZB2zPlPcbkBahAwHBszdijZB171ZBeSgcfnq1QZB7GfOZBi7E8JBGZADF2V2Yb5xydyL9OXHSrw8etyOLrNcyiH8ealT4Gi2rDQNnQ9Lfh06xmDHuAFTkhfSzc8VAQSUrvUVqSZAyqiZBohOZCTjoJwzVY30ufadkXrRv2h";   
 const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=6097851830225464&client_secret=0c57fb1bf447e5c3f928237e72522469&grant_type=client_credentials";
 const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
-const url = "https://graph.facebook.com/me?fields=posts&access_token=EABWp9sQ7yjgBAKp5m5gloE0r9J56sCUBjx7gK48dBnxDKi2Ax37oKbUfTHRNiIRzFugfZBdfTdQmGUIZBoiG8aN0owVVOZBDwQAUjZAqZBeKkptfAS4eZC8wyZCD7CSBAbhotmAShDxwZCPLJVdRldoCDdZBNRqZAYa5rd6hXa5xOwLegAi1pNw3mhWYd4CmdxbBc2QFUzlMhdHVXZAN2R5ZB0guEdCqmMJXMVHPcFL8nHdhHMovEJnaZB0uj";
+const postUrl = `https://graph.facebook.com/me?fields=posts&access_token=${user_access_token}`;
+const urlRoot = "https://graph.facebook.com/";
+
 var posts=[];
+var comments=[];
 
   app.get('/test', function(req, res) {
      res.send({message: "This is test"});
@@ -33,13 +37,19 @@ var posts=[];
       console.log('Facebook request body end:'); 
       if(changedFields[0]===constants.STATUS||changedFields[0]===constants.FEED) axios.get(oauthUrl).then((response)=> {
         // let access_token = response.data.access_token;
-        https.get(url, (resp) => {
+        https.get(postUrl, (resp) => {
          let data = '';
          resp.on('data', (chunk) => {
            data += chunk;
          });
          resp.on('end', () => {
-           posts=JSON.parse(data).posts.data.slice(0,5);
+           posts=JSON.parse(data).posts.data;
+           let commentPromises= posts.map((post)=> {
+              return https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`);
+           });
+           commentPromises.then((response)=> {
+               comments = response.data;
+           });
          });
        }).on("error", (err) => {
          console.log("Error: " + err.message);
@@ -50,6 +60,10 @@ var posts=[];
    
    app.get('/posts', function(req, res){
       res.send(posts);
+   });
+
+   app.get('/comments', function(req, res){
+      res.send(comments);
    });
 
 app.listen(process.env.PORT || port, () => console.log(`webhook is listening on port ${port}`));
