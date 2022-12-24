@@ -1,3 +1,4 @@
 module.exports = {
-    STATUS:'status'
+    STATUS:'status',
+    FEED: 'feed'
 }

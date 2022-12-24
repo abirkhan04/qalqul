@@ -31,7 +31,7 @@ var posts=[];
       console.log(JSON.stringify(req.body));
       let changedFields = req.body.entry[0].changed_fields;
       console.log('Facebook request body end:'); 
-      if(changedFields[0]===constants.STATUS) axios.get(oauthUrl).then((response)=> {
+      if(changedFields[0]===constants.STATUS||changedFields[0]===constants.FEED) axios.get(oauthUrl).then((response)=> {
         // let access_token = response.data.access_token;
         https.get(url, (resp) => {
          let data = '';
