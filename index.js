@@ -1,7 +1,5 @@
-'use strict';
-
+const https=require("https");
 const { default: axios } = require('axios');
-
 const
   express = require('express'),
   bodyParser = require('body-parser'),
@@ -39,10 +37,23 @@ const url = "https://graph.facebook.com/me?fields=posts&access_token=EABWp9sQ7yj
    }); 
    
    app.get('/posts', function(req, res){
-      axios.get(url).then(response=> {
-         console.log("request for posts");
-         res.send(response);
-     });
+      https.get(url, (resp) => {
+         let data = '';
+
+         // A chunk of data has been received.
+         resp.on('data', (chunk) => {
+           data += chunk;
+         });
+
+         // The whole response has been received. Print out the result.
+         resp.on('end', () => {
+          //  console.log(JSON.parse(data).explanation);
+           res.send(JSON.parse(data));
+         });
+
+       }).on("error", (err) => {
+         console.log("Error: " + err.message);
+       });
    });
 
 app.listen(process.env.PORT || port, () => console.log(`webhook is listening on port ${port}`));
