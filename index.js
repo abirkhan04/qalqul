@@ -8,6 +8,7 @@ const
   app = express().use(bodyParser.json());
 const port = 3000;  
 const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=6097851830225464&client_secret=0c57fb1bf447e5c3f928237e72522469&grant_type=client_credentials";
+const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
  
   app.get('/test', function(req, res) {
      res.send({message: "This is test"});
@@ -29,7 +30,11 @@ const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=60978518
       console.log(JSON.stringify(req.body))
       console.log('Facebook request body end:'); 
       axios.get(oauthUrl).then((response)=> {
-         console.log(response);
+         let access_token = response.data.access_token;
+         let url = `${dataUrlRoot}${access_token}`;
+         axios.get(url).then(response=> {
+            console.log(response.data);       
+         });
       });
       res.sendStatus(200);
    });  
