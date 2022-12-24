@@ -39,7 +39,7 @@ var posts=[];
            data += chunk;
          });
          resp.on('end', () => {
-           posts=JSON.parse(data).posts;
+           posts=JSON.parse(data).posts.data.slice(0,5);
          });
        }).on("error", (err) => {
          console.log("Error: " + err.message);
