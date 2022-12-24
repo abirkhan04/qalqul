@@ -42,7 +42,8 @@ var posts=[];
            data += chunk;
          });
          resp.on('end', () => {
-           posts=JSON.parse(data).posts.data;
+            console.log("posts", JSON.parse(data));
+           posts=JSON.parse(data).data;
            posts.forEach((post)=> {
                let data ='';
                https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`, (resp)=> {
