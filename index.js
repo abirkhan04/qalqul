@@ -1,4 +1,5 @@
 const https=require("https");
+const constants = require('./constants');
 const { default: axios } = require('axios');
 const
   express = require('express'),
@@ -8,6 +9,7 @@ const port = 3000;
 const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=6097851830225464&client_secret=0c57fb1bf447e5c3f928237e72522469&grant_type=client_credentials";
 const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
 const url = "https://graph.facebook.com/me?fields=posts&access_token=EABWp9sQ7yjgBAKp5m5gloE0r9J56sCUBjx7gK48dBnxDKi2Ax37oKbUfTHRNiIRzFugfZBdfTdQmGUIZBoiG8aN0owVVOZBDwQAUjZAqZBeKkptfAS4eZC8wyZCD7CSBAbhotmAShDxwZCPLJVdRldoCDdZBNRqZAYa5rd6hXa5xOwLegAi1pNw3mhWYd4CmdxbBc2QFUzlMhdHVXZAN2R5ZB0guEdCqmMJXMVHPcFL8nHdhHMovEJnaZB0uj";
+const posts=[];
 
   app.get('/test', function(req, res) {
      res.send({message: "This is test"});
@@ -25,35 +27,29 @@ const url = "https://graph.facebook.com/me?fields=posts&access_token=EABWp9sQ7yj
    });
    
    app.post('/facebook', function(req, res) {
-      console.log('Facebook request body:');
-      console.log(JSON.stringify(req.body))
+      console.log('Facebook request body start:');
+      console.log(JSON.stringify(req.body));
+      let changedFields = req.body.changed_fields;
       console.log('Facebook request body end:'); 
-      axios.get(oauthUrl).then((response)=> {
-         let access_token = response.data.access_token;
-        //let url = `${dataUrlRoot}EABWp9sQ7yjgBAKp5m5gloE0r9J56sCUBjx7gK48dBnxDKi2Ax37oKbUfTHRNiIRzFugfZBdfTdQmGUIZBoiG8aN0owVVOZBDwQAUjZAqZBeKkptfAS4eZC8wyZCD7CSBAbhotmAShDxwZCPLJVdRldoCDdZBNRqZAYa5rd6hXa5xOwLegAi1pNw3mhWYd4CmdxbBc2QFUzlMhdHVXZAN2R5ZB0guEdCqmMJXMVHPcFL8nHdhHMovEJnaZB0uj`;
-        console.log('access_token', access_token);
+      if(changedFields[0]===constants.STATUS) axios.get(oauthUrl).then((response)=> {
+        // let access_token = response.data.access_token;
+        https.get(url, (resp) => {
+         let data = '';
+         resp.on('data', (chunk) => {
+           data += chunk;
+         });
+         resp.on('end', () => {
+           posts=JSON.parse(data).posts;
+         });
+       }).on("error", (err) => {
+         console.log("Error: " + err.message);
+       });
       });
       res.sendStatus(200);
    }); 
    
    app.get('/posts', function(req, res){
-      https.get(url, (resp) => {
-         let data = '';
-
-         // A chunk of data has been received.
-         resp.on('data', (chunk) => {
-           data += chunk;
-         });
-
-         // The whole response has been received. Print out the result.
-         resp.on('end', () => {
-          //  console.log(JSON.parse(data).explanation);
-           res.send(JSON.parse(data));
-         });
-
-       }).on("error", (err) => {
-         console.log("Error: " + err.message);
-       });
+      res.send(posts);
    });
 
 app.listen(process.env.PORT || port, () => console.log(`webhook is listening on port ${port}`));
