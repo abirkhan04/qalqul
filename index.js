@@ -33,7 +33,7 @@ const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
          let access_token = response.data.access_token;
          let url = `${dataUrlRoot}EABWp9sQ7yjgBAKp5m5gloE0r9J56sCUBjx7gK48dBnxDKi2Ax37oKbUfTHRNiIRzFugfZBdfTdQmGUIZBoiG8aN0owVVOZBDwQAUjZAqZBeKkptfAS4eZC8wyZCD7CSBAbhotmAShDxwZCPLJVdRldoCDdZBNRqZAYa5rd6hXa5xOwLegAi1pNw3mhWYd4CmdxbBc2QFUzlMhdHVXZAN2R5ZB0guEdCqmMJXMVHPcFL8nHdhHMovEJnaZB0uj`;
          axios.get(url).then(response=> {
-            console.log(response.data);       
+            console.log(response);
          });
       });
       res.sendStatus(200);
