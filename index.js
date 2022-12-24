@@ -6,6 +6,10 @@ const
 const port = 3000;  
 
 
+  app.get('/test', function(req, res) {
+     res.send({message: "This is test"});
+  });
+
   app.get(['/facebook', '/instagram'], function(req, res) {
     if (
         req.param('hub.mode') == 'subscribe' &&
