@@ -9,7 +9,7 @@ const port = 3000;
 const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=6097851830225464&client_secret=0c57fb1bf447e5c3f928237e72522469&grant_type=client_credentials";
 const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
 const url = "https://graph.facebook.com/me?fields=posts&access_token=EABWp9sQ7yjgBAKp5m5gloE0r9J56sCUBjx7gK48dBnxDKi2Ax37oKbUfTHRNiIRzFugfZBdfTdQmGUIZBoiG8aN0owVVOZBDwQAUjZAqZBeKkptfAS4eZC8wyZCD7CSBAbhotmAShDxwZCPLJVdRldoCDdZBNRqZAYa5rd6hXa5xOwLegAi1pNw3mhWYd4CmdxbBc2QFUzlMhdHVXZAN2R5ZB0guEdCqmMJXMVHPcFL8nHdhHMovEJnaZB0uj";
-const posts=[];
+var posts=[];
 
   app.get('/test', function(req, res) {
      res.send({message: "This is test"});
