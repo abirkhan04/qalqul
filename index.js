@@ -47,7 +47,7 @@ var comments=[];
            let commentPromises= posts.map((post)=> {
               return https.get(`${urlRoot}${post.id}/comments?access_token=${user_access_token}`);
            });
-           commentPromises.then((response)=> {
+           Promsie.all(commentPromises).then((response)=> {
                comments = response.data;
            });
          });
