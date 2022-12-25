@@ -43,6 +43,7 @@ var posts=[];
            data += chunk;
          });
          resp.on('end', () => {
+           if(JSON.parse(data).posts) {
            posts=JSON.parse(data).posts.data;
            posts.forEach((post)=> {
                let data ='';
@@ -57,6 +58,7 @@ var posts=[];
                   console.log("Error: "+ err.message);
                });
            });
+         } 
          });
        }).on("error", (err) => {
          console.log("Error: " + err.message);
