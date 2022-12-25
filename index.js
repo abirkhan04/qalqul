@@ -8,7 +8,7 @@ const
   app = express().use(bodyParser.json());
   app.use(cors());
 const port = 3000;
-var user_access_token="EABWp9sQ7yjgBAK66Q68wQQhsaUbfOnozPZAvZAzedE04MSTV2yhOK5ggBxnvXSvSaJ3M0zOHJvexJZCozj1VlrZAZBT0D4kPbPEDGcPVLFbiBK6I9t3cnc3w34B7cPSSao8jU2bWT4c75BVge9HeWmeQ86LqBS8i8OHeIg7hq4tTB327teghSgGhcwCgHP2jyieYkr7YPWJnxBhHWUD2cdb33tVZBbmQNk5dIxxOqSMT3WGahTZAHjB";   
+var user_access_token="EABWp9sQ7yjgBAGZBzOND5aBrLLdbLamlx0Yi6yYF26fFsq71n7EgZBaq1ihCwVk9R3SflviSFuDNlkxGymX1VNfIhUinneergkojiU25NAZB61NZBXUN8C93NfCFHQIaL2haaldxjMYCRWN4ZCU2aK2X34EhCe4AWR9gUbPu1i6Fu1EpZBqKSx2RiSnh0PLuQhTpsRkymqTcZB1FGpqvIUce9R47TxApA3gcfFlDnWZBZCMQflyZAOzFj2";   
 const oauthUrl="https://graph.facebook.com/oauth/access_token?client_id=6097851830225464&client_secret=0c57fb1bf447e5c3f928237e72522469&grant_type=client_credentials";
 const dataUrlRoot = "https://graph.facebook.com/me?fields=posts&access_token=";
 const postUrl = `https://graph.facebook.com/me?fields=posts&access_token=${user_access_token}`;
@@ -68,22 +68,8 @@ var posts=[];
    });
 
    app.get('/posts', function(req, res){
-      https.get(postUrl, (resp) => {
-         let data = '';
-         resp.on('data', (chunk) => {
-           data += chunk;
-         });
-         resp.on('end', () => {
-           if(JSON.parse(data).posts) {
-             posts = JSON.parse(data).posts.data;
-             res.send(posts); 
-             } else {
-             res.send({message: "No posts are retrieved"});
-           }
-         });
-       }).on("error", (err) => {
-         console.log("Error: " + err.message);
-       });
+      console.log("access token: " + user_access_token);
+      res.send(posts);
    });
 
    app.post('/access-token', function(req, res){
