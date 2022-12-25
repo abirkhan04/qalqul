@@ -58,9 +58,7 @@ var posts=[];
                   console.log("Error: "+ err.message);
                });
            });
-         } else {
-            res.send({message: "No post retrieved"});
-         } 
+         }
          });
        }).on("error", (err) => {
          console.log("Error: " + err.message);
@@ -70,7 +68,22 @@ var posts=[];
    });
 
    app.get('/posts', function(req, res){
-      res.send(posts);
+      https.get(postUrl, (resp) => {
+         let data = '';
+         resp.on('data', (chunk) => {
+           data += chunk;
+         });
+         resp.on('end', () => {
+           if(JSON.parse(data).posts) {
+             posts = JSON.parse(data).posts.data;
+             res.send(posts); 
+             } else {
+             res.send({message: "No posts are retrieved"});
+           }
+         });
+       }).on("error", (err) => {
+         console.log("Error: " + err.message);
+       });
    });
 
    app.post('/access-token', function(req, res){
