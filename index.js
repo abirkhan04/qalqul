@@ -69,4 +69,9 @@ var posts=[];
       res.send(posts);
    });
 
+   app.post('/access-token', function(req, res){
+      user_access_token=req.accessToken;
+      res.send({message: "access token updated"});
+   });
+
 app.listen(process.env.PORT || port, () => console.log(`webhook is listening on port ${port}`));
