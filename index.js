@@ -58,6 +58,8 @@ var posts=[];
                   console.log("Error: "+ err.message);
                });
            });
+         } else {
+            res.send({message: "No post retrieved"});
          } 
          });
        }).on("error", (err) => {
